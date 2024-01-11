@@ -10,7 +10,7 @@ export default function Note({ note }) {
     <div className="card" style={{ width: "18rem", margin: "25px" }}>
       <div className="card-body">
         <h5 className="card-title">
-          {note.topicName}
+          {note.title}
           <span
             onClick={() => deleteNote(note.id)}
             style={{
@@ -22,7 +22,7 @@ export default function Note({ note }) {
             <MdDelete />
           </span>
         </h5>
-        <p className="card-text">{note.topicDetails}</p>
+        <p className="card-text">{note.content}</p>
       </div>
     </div>
   );

@@ -9,11 +9,17 @@ export const NotesListContext = createContext({
 const notesListReducer = (currentNoteslist, action) => {
   let newNotesList = currentNoteslist;
   if (action.type === "DELETE-NOTE") {
+    axios.delete(`http://127.0.0.1:8000/deleteNote/${action.payload.noteId}`);
     newNotesList = currentNoteslist.filter(
       (note) => note.id != action.payload.noteId
     );
   } else if (action.type === "ADD-NOTE") {
     newNotesList = [action.payload, ...currentNoteslist];
+
+    axios.post("http://127.0.0.1:8000/postNote", {
+      title: action.payload.title,
+      content: action.payload.content,
+    });
   }
   return newNotesList;
 };
@@ -28,8 +34,8 @@ export default function NotesListProvider({ children }) {
       type: "ADD-NOTE",
       payload: {
         id: Date.now(),
-        topicName: title,
-        topicDetails: body,
+        title: title,
+        content: body,
       },
     });
   };
@@ -50,41 +56,13 @@ export default function NotesListProvider({ children }) {
   );
 }
 
-const DEFAULT_NOTES_LIST = [
-  {
-    id: 1,
-    topicName: "Learning React js",
-    topicDetails:
-      " Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus totam ipsum saepe tempora nam sed! Hic molestiae repellendus cumque in labore neque consequuntur quis dolorum aliquid! Impedit, doloremque. Possimus, provident.",
-  },
-  {
-    id: 2,
-    topicName: "Python Asyn Methods",
-    topicDetails:
-      " Lorem ipsum dolor, sised! Hic molestiae repellendus cumque in labore neque consequuntur quis dolorum aliquid! Impedit, doloremque. Possimus, provident.",
-  },
-  {
-    id: 3,
-    topicName: "JS Vanilla vs React js",
-    topicDetails:
-      " Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus totam ipsum saepe tempora nam sed! Hic molestiae repellendus cumque in labore neque consequuntur quis dolorum aliquid! Impedit, doloremque. Possimus, provident.",
-  },
-];
-// const controller = new AbortController();
-// const signal = controller.signal;
-// console.log("fetching started...!");
-// fetch("http://127.0.0.1:8000/get_books", { signal }).then((res) =>
-//   console.log(res)
-// );
-// // .then(({ items }) => {
-// //   console.log(items);
-// // }
-// // );
+let DEFAULT_NOTES_LIST = [];
 
 async function getAllBooks() {
   try {
-    const books = await axios.get("http://127.0.0.1:8000/get_books");
-    console.log(books.data.payload);
+    const books = await axios.get("http://127.0.0.1:8000/");
+
+    DEFAULT_NOTES_LIST = books.data.payload;
   } catch (errors) {
     console.log(errors);
   }
