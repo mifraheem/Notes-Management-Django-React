@@ -15,11 +15,15 @@ const notesListReducer = (currentNoteslist, action) => {
     );
   } else if (action.type === "ADD-NOTE") {
     newNotesList = [action.payload, ...currentNoteslist];
-
-    axios.post("http://127.0.0.1:8000/postNote", {
-      title: action.payload.title,
-      content: action.payload.content,
-    });
+    axios
+      .post("http://127.0.0.1:8000/postNote", {
+        title: action.payload.title,
+        content: action.payload.content,
+      })
+      .then((res) => {
+        console.log(res.data.payload);
+        newNotesList[0].id = res.data.payload.id;
+      });
   }
   return newNotesList;
 };
