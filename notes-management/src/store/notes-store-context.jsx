@@ -21,7 +21,6 @@ const notesListReducer = (currentNoteslist, action) => {
         content: action.payload.content,
       })
       .then((res) => {
-        console.log(res.data.payload);
         newNotesList[0].id = res.data.payload.id;
       });
   }
